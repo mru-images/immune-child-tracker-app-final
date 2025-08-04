@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaccination Schedule - ImmunTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                ImmunTracker
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register-child.html">Register Child</a></li>
+                <li><a href="view-records.html">View Records</a></li>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="education.html">Education</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div class="flex-between mb-4">
+                <div>
+                    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.5rem;">
+                        Vaccination Schedule
+                    </h1>
+                    <p style="font-size: 1.125rem; color: var(--gray-600);">
+                        Track and manage vaccination schedules for all children
+                    </p>
+                </div>
+                <div class="flex" style="gap: 0.5rem;">
+                    <button id="printScheduleBtn" class="btn btn-secondary">
+                        <i class="fas fa-print"></i>
+                        Print Schedule
+                    </button>
+                    <button id="recordVaccinationBtn" class="btn btn-primary">
+                        <i class="fas fa-syringe"></i>
+                        Record Vaccination
+                    </button>
+                </div>
+            </div>
+
+            <!-- Child Selector -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="flex" style="gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label for="childSelect" class="form-label">Select Child:</label>
+                            <select id="childSelect" class="form-control">
+                                <option value="">Loading children...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="form-label" style="opacity: 0;">Filter</label>
+                            <div class="flex" style="gap: 0.5rem;">
+                                <button id="showAllBtn" class="btn btn-outline active">All</button>
+                                <button id="showDueBtn" class="btn btn-outline">Due</button>
+                                <button id="showOverdueBtn" class="btn btn-outline">Overdue</button>
+                                <button id="showCompletedBtn" class="btn btn-outline">Completed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schedule Content -->
+            <div id="scheduleContent">
+                <!-- Content will be loaded dynamically -->
+            </div>
+
+            <!-- No Child Selected -->
+            <div id="noChildSelected" class="card">
+                <div class="card-body text-center" style="padding: 3rem;">
+                    <i class="fas fa-calendar-alt" style="font-size: 4rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+                    <h3 style="color: var(--gray-600); margin-bottom: 1rem;">Select a Child</h3>
+                    <p style="color: var(--gray-500); margin-bottom: 2rem;">
+                        Choose a child from the dropdown above to view their vaccination schedule.
+                    </p>
+                    <a href="register-child.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Register New Child
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Record Vaccination Modal -->
+    <div id="vaccinationModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Record Vaccination</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vaccinationForm">
+                    <div class="form-group">
+                        <label for="vaccineSelect" class="form-label">Vaccine *</label>
+                        <select id="vaccineSelect" name="vaccine" class="form-control" required>
+                            <option value="">Select vaccine...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="dateAdministered" class="form-label">Date Administered *</label>
+                            <input type="date" id="dateAdministered" name="dateAdministered" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="batchNumber" class="form-label">Batch Number</label>
+                            <input type="text" id="batchNumber" name="batchNumber" class="form-control">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="administeredBy" class="form-label">Administered By</label>
+                            <input type="text" id="administeredBy" name="administeredBy" class="form-control" placeholder="Doctor/Nurse name">
+                        </div>
+                        <div class="form-group">
+                            <label for="location" class="form-label">Location</label>
+                            <input type="text" id="location" name="location" class="form-control" placeholder="Clinic/Hospital name">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="3" placeholder="Any additional notes or reactions..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline modal-close">Cancel</button>
+                <button type="submit" form="vaccinationForm" class="btn btn-primary" id="saveVaccinationBtn">
+                    <i class="fas fa-save"></i>
+                    Save Vaccination
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="firebase-utils.js"></script>
+    <script src="utils.js"></script>
+    <script src="schedule-manager.js"></script>
+    <script src="vaccination-recorder.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
+            
+            // Initialize managers
+            scheduleManager.initialize();
+            vaccinationRecorder.initialize();
+        });
+    </script>
+    
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .btn.active {
+            background: var(--primary-600);
+            color: white;
+        }
+        
+        .loading-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: var(--gray-600);
+        }
+    </style>
+</body>
+</html>

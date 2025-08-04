@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ImmunTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                ImmunTracker
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Register</a></li>
+            </ul>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div class="text-center mb-4">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--gray-800); margin-bottom: 1rem;">
+                        Create Account
+                    </h1>
+                    <p style="font-size: 1.125rem; color: var(--gray-600);">
+                        Join ImmunTracker to start managing your children's vaccinations
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-user-plus" style="color: var(--primary-500); margin-right: 0.5rem;"></i>
+                            Parent/Guardian Information
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="registerForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">First Name *</label>
+                                    <input type="text" id="firstName" name="firstName" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">Last Name *</label>
+                                    <input type="text" id="lastName" name="lastName" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" id="email" name="email" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea id="address" name="address" class="form-control" rows="3" placeholder="Full address including city, state, and zip code..."></textarea>
+                            </div>
+
+                            <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--gray-200);">
+
+                            <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">
+                                <i class="fas fa-lock" style="color: var(--secondary-500); margin-right: 0.5rem;"></i>
+                                Account Security
+                            </h3>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="password" class="form-label">Password *</label>
+                                    <input type="password" id="password" name="password" class="form-control" required minlength="6">
+                                    <small style="color: var(--gray-500);">Minimum 6 characters</small>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword" class="form-label">Confirm Password *</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <input type="checkbox" id="terms" name="terms" required>
+                                    I agree to the Terms of Service and Privacy Policy *
+                                </label>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer">
+                        <div class="flex-between">
+                            <a href="login.html" class="btn btn-outline">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Login
+                            </a>
+                            <button type="submit" form="registerForm" class="btn btn-primary" id="registerBtn">
+                                <i class="fas fa-user-plus"></i>
+                                Create Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is already logged in
+            if (auth.getCurrentUser()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            const form = document.getElementById('registerForm');
+            const registerBtn = document.getElementById('registerBtn');
+            
+            // Format phone number as user types
+            document.getElementById('phone').addEventListener('input', (e) => {
+                e.target.value = formatPhoneNumber(e.target.value);
+            });
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm(form)) {
+                    utils.showError(document.querySelector('.card-body'), 'Please fill in all required fields.');
+                    return;
+                }
+                
+                // Check password confirmation
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                if (password !== confirmPassword) {
+                    utils.showError(document.querySelector('.card-body'), 'Passwords do not match.');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = registerBtn.innerHTML;
+                registerBtn.innerHTML = '<div class="loading"></div> Creating Account...';
+                registerBtn.disabled = true;
+                
+                try {
+                    const formData = new FormData(form);
+                    const userData = {
+                        firstName: formData.get('firstName'),
+                        lastName: formData.get('lastName'),
+                        email: formData.get('email'),
+                        phone: formData.get('phone'),
+                        address: formData.get('address'),
+                        password: formData.get('password')
+                    };
+                    
+                    const result = await auth.register(userData);
+                    
+                    if (result.success) {
+                        utils.showSuccess('Account created successfully! Redirecting...');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 2000);
+                    } else {
+                        throw new Error(result.error || 'Registration failed');
+                    }
+                } catch (error) {
+                    console.error('Registration error:', error);
+                    showError(document.querySelector('.card-body'), `Registration failed: ${error.message}`);
+                } finally {
+                    // Restore button state
+                    registerBtn.innerHTML = originalText;
+                    registerBtn.disabled = false;
+                }
+            });
+        });
+        
+        function showError(element, message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                color: #dc2626;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+            `;
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            
+            // Remove existing error messages
+            const existingError = element.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            errorDiv.className = 'error-message';
+            element.insertBefore(errorDiv, element.firstChild);
+        }
+        
+        function validateForm(form) {
+            const inputs = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#dc2626';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            return isValid;
+        }
+        
+        function formatPhoneNumber(phone) {
+            const cleaned = phone.replace(/\D/g, '');
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return phone;
+        }
+    </script>
+</body>
+</html>

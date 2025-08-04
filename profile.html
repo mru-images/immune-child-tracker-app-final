@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - ImmunTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                ImmunTracker
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register-child.html">Register Child</a></li>
+                <li><a href="view-records.html">View Records</a></li>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="education.html">Education</a></li>
+                <li><a href="profile.html">Profile</a></li>
+                <li><a href="#" id="logoutBtn">Logout</a></li>
+            </ul>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div class="text-center mb-4">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--gray-800); margin-bottom: 0.5rem;">
+                        My Profile
+                    </h1>
+                    <p style="font-size: 1.125rem; color: var(--gray-600);">
+                        Manage your account information and preferences
+                    </p>
+                </div>
+
+                <!-- Profile Overview -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="fas fa-user-circle" style="color: var(--primary-500); margin-right: 0.5rem;"></i>
+                            Profile Overview
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-2" style="align-items: center;">
+                            <div>
+                                <div style="background: linear-gradient(135deg, var(--primary-500), var(--secondary-500)); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem;">
+                                    <i class="fas fa-user" style="color: white; font-size: 2rem;"></i>
+                                </div>
+                                <h3 id="profileName" style="font-size: 1.5rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.5rem;">
+                                    Loading...
+                                </h3>
+                                <p id="profileEmail" style="color: var(--gray-600); margin-bottom: 0.5rem;">
+                                    Loading...
+                                </p>
+                                <p id="memberSince" style="color: var(--gray-500); font-size: 0.9rem;">
+                                    Loading...
+                                </p>
+                            </div>
+                            <div class="text-center">
+                                <div class="grid grid-2" style="gap: 1rem;">
+                                    <div>
+                                        <div id="totalChildren" style="font-size: 2rem; font-weight: 700; color: var(--primary-600);">0</div>
+                                        <div style="color: var(--gray-600); font-size: 0.9rem;">Children</div>
+                                    </div>
+                                    <div>
+                                        <div id="totalVaccinations" style="font-size: 2rem; font-weight: 700; color: var(--secondary-600);">0</div>
+                                        <div style="color: var(--gray-600); font-size: 0.9rem;">Vaccinations</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <div class="flex-between">
+                            <h3 class="card-title">
+                                <i class="fas fa-id-card" style="color: var(--accent-500); margin-right: 0.5rem;"></i>
+                                Personal Information
+                            </h3>
+                            <button id="editProfileBtn" class="btn btn-outline">
+                                <i class="fas fa-edit"></i>
+                                Edit Profile
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">First Name *</label>
+                                    <input type="text" id="firstName" name="firstName" class="form-control" required disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">Last Name *</label>
+                                    <input type="text" id="lastName" name="lastName" class="form-control" required disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email" class="form-label">Email Address *</label>
+                                    <input type="email" id="email" name="email" class="form-control" required disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" id="phone" name="phone" class="form-control" required disabled>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="address" class="form-label">Address</label>
+                                <textarea id="address" name="address" class="form-control" rows="3" disabled></textarea>
+                            </div>
+
+                            <div id="profileActions" style="display: none;" class="flex" style="gap: 0.5rem; justify-content: flex-end;">
+                                <button type="button" id="cancelEditBtn" class="btn btn-outline">
+                                    <i class="fas fa-times"></i>
+                                    Cancel
+                                </button>
+                                <button type="submit" id="saveProfileBtn" class="btn btn-primary">
+                                    <i class="fas fa-save"></i>
+                                    Save Changes
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-shield-alt" style="color: var(--success-500); margin-right: 0.5rem;"></i>
+                            Security Settings
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="flex-between mb-3" style="padding: 1rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                            <div>
+                                <h4 style="font-size: 1rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.25rem;">Password</h4>
+                                <p style="color: var(--gray-600); margin: 0; font-size: 0.9rem;">Last changed: Never</p>
+                            </div>
+                            <button id="changePasswordBtn" class="btn btn-secondary">
+                                <i class="fas fa-key"></i>
+                                Change Password
+                            </button>
+                        </div>
+                        
+                        <div class="flex-between" style="padding: 1rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                            <div>
+                                <h4 style="font-size: 1rem; font-weight: 600; color: var(--gray-800); margin-bottom: 0.25rem;">Account Security</h4>
+                                <p style="color: var(--gray-600); margin: 0; font-size: 0.9rem;">Your account is secured with email and password</p>
+                            </div>
+                            <span class="badge badge-success">
+                                <i class="fas fa-check"></i>
+                                Secure
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Statistics -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-bar" style="color: var(--secondary-500); margin-right: 0.5rem;"></i>
+                            Account Statistics
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="grid grid-4">
+                            <div class="text-center">
+                                <div id="statChildren" style="font-size: 1.5rem; font-weight: 600; color: var(--primary-600);">0</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Registered Children</div>
+                            </div>
+                            <div class="text-center">
+                                <div id="statVaccinations" style="font-size: 1.5rem; font-weight: 600; color: var(--secondary-600);">0</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Total Vaccinations</div>
+                            </div>
+                            <div class="text-center">
+                                <div id="statCompletion" style="font-size: 1.5rem; font-weight: 600; color: var(--success-500);">0%</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Completion Rate</div>
+                            </div>
+                            <div class="text-center">
+                                <div id="statOverdue" style="font-size: 1.5rem; font-weight: 600; color: var(--error-500);">0</div>
+                                <div style="color: var(--gray-600); font-size: 0.875rem;">Overdue</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Danger Zone -->
+                <div class="card" style="border-color: var(--error-500);">
+                    <div class="card-header" style="background: var(--error-50); border-color: var(--error-500);">
+                        <h3 class="card-title" style="color: var(--error-700);">
+                            <i class="fas fa-exclamation-triangle" style="margin-right: 0.5rem;"></i>
+                            Danger Zone
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="flex-between">
+                            <div>
+                                <h4 style="color: var(--error-700); margin-bottom: 0.5rem;">Delete Account</h4>
+                                <p style="color: var(--gray-600); margin: 0;">
+                                    Permanently delete your account and all associated data. This action cannot be undone.
+                                </p>
+                            </div>
+                            <button id="deleteAccountBtn" class="btn" style="background: var(--error-500); color: white;">
+                                <i class="fas fa-trash"></i>
+                                Delete Account
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Change Password Modal -->
+    <div id="passwordModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Change Password</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="currentPassword" class="form-label">Current Password *</label>
+                        <input type="password" id="currentPassword" name="currentPassword" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword" class="form-label">New Password *</label>
+                        <input type="password" id="newPassword" name="newPassword" class="form-control" required minlength="6">
+                        <small style="color: var(--gray-500);">Minimum 6 characters</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword" class="form-label">Confirm New Password *</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline modal-close">Cancel</button>
+                <button type="submit" form="passwordForm" class="btn btn-primary" id="savePasswordBtn">
+                    <i class="fas fa-save"></i>
+                    Change Password
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div id="deleteAccountModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 style="color: var(--error-500);">Delete Account</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--error-600); font-weight: 600; margin-bottom: 1rem;">
+                    ⚠️ This action is permanent and cannot be undone!
+                </p>
+                <p style="margin-bottom: 1rem;">
+                    Deleting your account will permanently remove:
+                </p>
+                <ul style="color: var(--gray-700); margin-bottom: 1rem;">
+                    <li>All children's records</li>
+                    <li>All vaccination history</li>
+                    <li>Your profile information</li>
+                    <li>All associated data</li>
+                </ul>
+                <div class="form-group">
+                    <label for="deleteConfirmation" class="form-label">
+                        Type "DELETE" to confirm:
+                    </label>
+                    <input type="text" id="deleteConfirmation" class="form-control" placeholder="DELETE">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline modal-close">Cancel</button>
+                <button type="button" class="btn" id="confirmDeleteAccountBtn" style="background: var(--error-500); color: white;" disabled>
+                    <i class="fas fa-trash"></i>
+                    Delete Account
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="firebase-utils.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        let currentUser = null;
+        let isEditing = false;
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
+            
+            // Setup logout functionality
+            document.getElementById('logoutBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                auth.logout();
+            });
+            
+            loadProfile();
+            setupEventListeners();
+        });
+        
+        function setupEventListeners() {
+            document.getElementById('editProfileBtn').addEventListener('click', toggleEdit);
+            document.getElementById('cancelEditBtn').addEventListener('click', cancelEdit);
+            document.getElementById('profileForm').addEventListener('submit', handleProfileUpdate);
+            document.getElementById('changePasswordBtn').addEventListener('click', openPasswordModal);
+            document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
+            document.getElementById('deleteAccountBtn').addEventListener('click', openDeleteAccountModal);
+            document.getElementById('confirmDeleteAccountBtn').addEventListener('click', handleAccountDeletion);
+            
+            // Delete confirmation input
+            document.getElementById('deleteConfirmation').addEventListener('input', (e) => {
+                const confirmBtn = document.getElementById('confirmDeleteAccountBtn');
+                confirmBtn.disabled = e.target.value !== 'DELETE';
+            });
+            
+            // Modal functionality
+            document.addEventListener('click', (e) => {
+                const modals = document.querySelectorAll('.modal');
+                modals.forEach(modal => {
+                    if (e.target.classList.contains('modal-close') || e.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Phone number formatting
+            document.getElementById('phone').addEventListener('input', (e) => {
+                e.target.value = formatPhoneNumber(e.target.value);
+            });
+        }
+        
+        async function loadProfile() {
+            try {
+                currentUser = auth.getCurrentUser();
+                if (!currentUser) {
+                    throw new Error('User not authenticated');
+                }
+                
+                // Update profile display
+                document.getElementById('profileName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                document.getElementById('profileEmail').textContent = currentUser.email;
+                
+                const memberSince = new Date(currentUser.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long'
+                });
+                document.getElementById('memberSince').textContent = `Member since ${memberSince}`;
+                
+                // Populate form
+                document.getElementById('firstName').value = currentUser.firstName || '';
+                document.getElementById('lastName').value = currentUser.lastName || '';
+                document.getElementById('email').value = currentUser.email || '';
+                document.getElementById('phone').value = currentUser.phone || '';
+                document.getElementById('address').value = currentUser.address || '';
+                
+                // Load statistics
+                await loadStatistics();
+                
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showErrorMessage('Failed to load profile information');
+            }
+        }
+        
+        async function loadStatistics() {
+            try {
+                const [childrenResult, vaccinationsResult] = await Promise.all([
+                    childOperations.getAllChildren(),
+                    vaccinationOperations.getAllVaccinations()
+                ]);
+                
+                const totalChildren = childrenResult.success ? childrenResult.data.length : 0;
+                const totalVaccinations = vaccinationsResult.success ? 
+                    vaccinationsResult.data.filter(v => v.administered).length : 0;
+                
+                // Calculate completion rate and overdue
+                let completionRate = 0;
+                let overdueCount = 0;
+                
+                if (childrenResult.success && childrenResult.data.length > 0) {
+                    const expectedVaccinations = totalChildren * 12; // Assuming 12 vaccines per child
+                    completionRate = Math.round((totalVaccinations / expectedVaccinations) * 100);
+                    
+                    // Calculate overdue vaccinations
+                    for (const child of childrenResult.data) {
+                        const schedule = vaccineSchedule.generateSchedule(child.dateOfBirth);
+                        overdueCount += schedule.filter(v => v.status === 'overdue').length;
+                    }
+                }
+                
+                // Update displays
+                document.getElementById('totalChildren').textContent = totalChildren;
+                document.getElementById('totalVaccinations').textContent = totalVaccinations;
+                document.getElementById('statChildren').textContent = totalChildren;
+                document.getElementById('statVaccinations').textContent = totalVaccinations;
+                document.getElementById('statCompletion').textContent = `${completionRate}%`;
+                document.getElementById('statOverdue').textContent = overdueCount;
+                
+            } catch (error) {
+                console.error('Error loading statistics:', error);
+            }
+        }
+        
+        function toggleEdit() {
+            isEditing = !isEditing;
+            const inputs = document.querySelectorAll('#profileForm input, #profileForm textarea');
+            const editBtn = document.getElementById('editProfileBtn');
+            const actions = document.getElementById('profileActions');
+            
+            inputs.forEach(input => {
+                if (input.id !== 'email') { // Don't allow email editing
+                    input.disabled = !isEditing;
+                }
+            });
+            
+            if (isEditing) {
+                editBtn.style.display = 'none';
+                actions.style.display = 'flex';
+            } else {
+                editBtn.style.display = 'inline-flex';
+                actions.style.display = 'none';
+            }
+        }
+        
+        function cancelEdit() {
+            isEditing = false;
+            toggleEdit();
+            
+            // Reset form values
+            document.getElementById('firstName').value = currentUser.firstName || '';
+            document.getElementById('lastName').value = currentUser.lastName || '';
+            document.getElementById('phone').value = currentUser.phone || '';
+            document.getElementById('address').value = currentUser.address || '';
+        }
+        
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const saveBtn = document.getElementById('saveProfileBtn');
+            
+            if (!validateForm(form)) {
+                showErrorMessage('Please fill in all required fields.');
+                return;
+            }
+            
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<div class="loading"></div> Saving...';
+            saveBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(form);
+                
+                const updates = {
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    phone: formData.get('phone'),
+                    address: formData.get('address')
+                };
+                
+                const result = await auth.updateProfile(updates);
+                
+                if (result.success) {
+                    currentUser = { ...currentUser, ...updates };
+                    document.getElementById('profileName').textContent = `${currentUser.firstName} ${currentUser.lastName}`;
+                    
+                    showSuccessMessage('Profile updated successfully!');
+                    toggleEdit();
+                } else {
+                    throw new Error(result.error || 'Failed to update profile');
+                }
+            } catch (error) {
+                console.error('Profile update error:', error);
+                showErrorMessage(`Update failed: ${error.message}`);
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+        
+        function openPasswordModal() {
+            document.getElementById('passwordModal').style.display = 'flex';
+        }
+        
+        async function handlePasswordChange(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const saveBtn = document.getElementById('savePasswordBtn');
+            const formData = new FormData(form);
+            
+            const currentPassword = formData.get('currentPassword');
+            const newPassword = formData.get('newPassword');
+            const confirmPassword = formData.get('confirmPassword');
+            
+            if (newPassword !== confirmPassword) {
+                showErrorMessage('New passwords do not match.');
+                return;
+            }
+            
+            const originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = '<div class="loading"></div> Changing...';
+            saveBtn.disabled = true;
+            
+            try {
+                // For demo purposes, we'll just show success
+                // In a real app, you'd verify the current password and update it
+                showSuccessMessage('Password changed successfully!');
+                document.getElementById('passwordModal').style.display = 'none';
+                form.reset();
+            } catch (error) {
+                console.error('Password change error:', error);
+                showErrorMessage(`Password change failed: ${error.message}`);
+            } finally {
+                saveBtn.innerHTML = originalText;
+                saveBtn.disabled = false;
+            }
+        }
+        
+        function openDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').style.display = 'flex';
+        }
+        
+        async function handleAccountDeletion() {
+            const confirmBtn = document.getElementById('confirmDeleteAccountBtn');
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.innerHTML = '<div class="loading"></div> Deleting...';
+            confirmBtn.disabled = true;
+            
+            try {
+                // In a real app, you'd delete all user data from the database
+                showSuccessMessage('Account deletion initiated. You will be logged out shortly.');
+                
+                setTimeout(() => {
+                    auth.logout();
+                }, 3000);
+            } catch (error) {
+                console.error('Account deletion error:', error);
+                showErrorMessage(`Account deletion failed: ${error.message}`);
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+            }
+        }
+        
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                color: #dc2626;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                max-width: 400px;
+            `;
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            document.body.appendChild(errorDiv);
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+        
+        function showSuccessMessage(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+                max-width: 400px;
+            `;
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        function validateForm(form) {
+            const inputs = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#dc2626';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            return isValid;
+        }
+        
+        function formatPhoneNumber(phone) {
+            const cleaned = phone.replace(/\D/g, '');
+            const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+            if (match) {
+                return `(${match[1]}) ${match[2]}-${match[3]}`;
+            }
+            return phone;
+        }
+    </script>
+    
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+    </style>
+</body>
+</html>

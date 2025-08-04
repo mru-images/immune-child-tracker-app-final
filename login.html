@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ImmunTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                ImmunTracker
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="register.html">Register</a></li>
+            </ul>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 400px; margin: 0 auto;">
+                <div class="text-center mb-4">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--gray-800); margin-bottom: 1rem;">
+                        Welcome Back
+                    </h1>
+                    <p style="font-size: 1.125rem; color: var(--gray-600);">
+                        Sign in to your ImmunTracker account
+                    </p>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <form id="loginForm">
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address *</label>
+                                <input type="email" id="email" name="email" class="form-control" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password" class="form-label">Password *</label>
+                                <input type="password" id="password" name="password" class="form-control" required>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary" id="loginBtn" style="width: 100%; margin-bottom: 1rem;">
+                                <i class="fas fa-sign-in-alt"></i>
+                                Sign In
+                            </button>
+
+                            <div class="text-center">
+                                <p style="color: var(--gray-600);">
+                                    Don't have an account? 
+                                    <a href="register.html" style="color: var(--primary-600); text-decoration: none; font-weight: 500;">
+                                        Register here
+                                    </a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if user is already logged in
+            if (auth.getCurrentUser()) {
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            const form = document.getElementById('loginForm');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm(form)) {
+                    utils.showError(document.querySelector('.card-body'), 'Please fill in all required fields.');
+                    return;
+                }
+                
+                // Show loading state
+                const originalText = loginBtn.innerHTML;
+                loginBtn.innerHTML = '<div class="loading"></div> Signing In...';
+                loginBtn.disabled = true;
+                
+                try {
+                    const formData = new FormData(form);
+                    const email = formData.get('email');
+                    const password = formData.get('password');
+                    
+                    const result = await auth.login(email, password);
+                    
+                    if (result.success) {
+                        utils.showSuccess('Login successful! Redirecting...');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    } else {
+                        throw new Error(result.error || 'Login failed');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    showError(document.querySelector('.card-body'), `Login failed: ${error.message}`);
+                } finally {
+                    // Restore button state
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                }
+            });
+        });
+        
+        function showError(element, message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                color: #dc2626;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+            `;
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            
+            // Remove existing error messages
+            const existingError = element.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            errorDiv.className = 'error-message';
+            element.insertBefore(errorDiv, element.firstChild);
+        }
+        
+        function validateForm(form) {
+            const inputs = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#dc2626';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            return isValid;
+        }
+    </script>
+</body>
+</html>

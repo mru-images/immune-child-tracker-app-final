@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Child Record - ImmunTracker</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-brand">
+                <i class="fas fa-shield-alt"></i>
+                ImmunTracker
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="register-child.html">Register Child</a></li>
+                <li><a href="view-records.html">View Records</a></li>
+                <li><a href="schedule.html">Schedule</a></li>
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="education.html">Education</a></li>
+                <li><a href="profile.html">Profile</a></li>
+            </ul>
+            <button class="nav-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <section class="section">
+        <div class="container">
+            <div style="max-width: 600px; margin: 0 auto;">
+                <div class="text-center mb-4">
+                    <h1 style="font-size: 2.5rem; font-weight: 700; color: var(--gray-800); margin-bottom: 1rem;">
+                        Update Child Record
+                    </h1>
+                    <p style="font-size: 1.125rem; color: var(--gray-600);">
+                        Edit your child's information and vaccination records
+                    </p>
+                </div>
+
+                <!-- Loading State -->
+                <div id="loadingState" class="card">
+                    <div class="card-body text-center">
+                        <div class="loading"></div>
+                        <p style="margin-top: 1rem; color: var(--gray-600);">Loading child information...</p>
+                    </div>
+                </div>
+
+                <!-- Child Form -->
+                <div id="childForm" style="display: none;">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">
+                                <i class="fas fa-user-edit" style="color: var(--primary-500); margin-right: 0.5rem;"></i>
+                                Child Information
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <form id="updateForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName" class="form-label">First Name *</label>
+                                        <input type="text" id="firstName" name="firstName" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName" class="form-label">Last Name *</label>
+                                        <input type="text" id="lastName" name="lastName" class="form-control" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="dateOfBirth" class="form-label">Date of Birth *</label>
+                                        <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gender" class="form-label">Gender *</label>
+                                        <select id="gender" name="gender" class="form-control" required>
+                                            <option value="">Select Gender</option>
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="birthPlace" class="form-label">Place of Birth</label>
+                                    <input type="text" id="birthPlace" name="birthPlace" class="form-control" placeholder="City, Country">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="medicalConditions" class="form-label">Medical Conditions</label>
+                                    <textarea id="medicalConditions" name="medicalConditions" class="form-control" rows="3" placeholder="Any known allergies, medical conditions, or special considerations..."></textarea>
+                                </div>
+
+                                <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--gray-200);">
+
+                                <h3 style="font-size: 1.25rem; font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">
+                                    <i class="fas fa-hospital" style="color: var(--accent-500); margin-right: 0.5rem;"></i>
+                                    Healthcare Information
+                                </h3>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="pediatrician" class="form-label">Pediatrician Name</label>
+                                        <input type="text" id="pediatrician" name="pediatrician" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="clinic" class="form-label">Clinic/Hospital</label>
+                                        <input type="text" id="clinic" name="clinic" class="form-control">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="insurance" class="form-label">Insurance Information</label>
+                                    <input type="text" id="insurance" name="insurance" class="form-control" placeholder="Insurance provider and policy number">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <div class="flex-between">
+                                <div class="flex" style="gap: 0.5rem;">
+                                    <a href="view-records.html" class="btn btn-outline">
+                                        <i class="fas fa-arrow-left"></i>
+                                        Back to Records
+                                    </a>
+                                    <button type="button" id="deleteBtn" class="btn" style="background: var(--error-500); color: white;">
+                                        <i class="fas fa-trash"></i>
+                                        Delete Child
+                                    </button>
+                                </div>
+                                <button type="submit" form="updateForm" class="btn btn-primary" id="updateBtn">
+                                    <i class="fas fa-save"></i>
+                                    Update Record
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vaccination History -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <div class="flex-between">
+                                <h3 class="card-title">
+                                    <i class="fas fa-syringe" style="color: var(--secondary-500); margin-right: 0.5rem;"></i>
+                                    Vaccination History
+                                </h3>
+                                <button id="addVaccinationBtn" class="btn btn-secondary">
+                                    <i class="fas fa-plus"></i>
+                                    Add Vaccination
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="vaccinationHistory">
+                                <!-- Vaccination history will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error State -->
+                <div id="errorState" style="display: none;" class="card">
+                    <div class="card-body text-center">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--error-500); font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <h3 style="color: var(--error-500); margin-bottom: 1rem;">Error Loading Child</h3>
+                        <p style="color: var(--gray-600); margin-bottom: 2rem;" id="errorMessage">
+                            Failed to load child information.
+                        </p>
+                        <a href="view-records.html" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Back to Records
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 style="color: var(--error-500);">Confirm Deletion</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete this child's record? This action cannot be undone and will remove all vaccination history.</p>
+                <p style="font-weight: 600; color: var(--error-500);">This is permanent!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline modal-close">Cancel</button>
+                <button type="button" class="btn" id="confirmDeleteBtn" style="background: var(--error-500); color: white;">
+                    <i class="fas fa-trash"></i>
+                    Delete Permanently
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="config.js"></script>
+    <script src="auth.js"></script>
+    <script src="firebase-utils.js"></script>
+    <script src="utils.js"></script>
+    <script>
+        let currentChild = null;
+        let childVaccinations = [];
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check authentication
+            if (!auth.requireAuth()) {
+                return;
+            }
+            
+            // Get child ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const childId = urlParams.get('child');
+            
+            if (!childId) {
+                showError('No child ID provided');
+                return;
+            }
+            
+            loadChild(childId);
+            setupEventListeners();
+        });
+        
+        function setupEventListeners() {
+            document.getElementById('updateForm').addEventListener('submit', handleUpdate);
+            document.getElementById('deleteBtn').addEventListener('click', showDeleteModal);
+            document.getElementById('confirmDeleteBtn').addEventListener('click', handleDelete);
+            document.getElementById('addVaccinationBtn').addEventListener('click', () => {
+                if (currentChild) {
+                    window.location.href = `schedule.html?child=${currentChild.id}`;
+                }
+            });
+            
+            // Modal functionality
+            document.addEventListener('click', (e) => {
+                const modal = document.getElementById('deleteModal');
+                if (e.target.classList.contains('modal-close') || e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+            
+            // Set max date to today for date of birth
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('dateOfBirth').setAttribute('max', today);
+        }
+        
+        async function loadChild(childId) {
+            const loadingState = document.getElementById('loadingState');
+            const childForm = document.getElementById('childForm');
+            const errorState = document.getElementById('errorState');
+            
+            try {
+                // Load child data
+                const childResult = await childOperations.getChildById(childId);
+                if (!childResult.success) {
+                    throw new Error(childResult.error || 'Child not found');
+                }
+                
+                currentChild = childResult.data;
+                
+                // Load vaccination history
+                const scheduleResult = await scheduleOperations.getChildSchedule(childId);
+                childVaccinations = scheduleResult.success ? scheduleResult.data.filter(s => s.completed) : [];
+                
+                // Populate form
+                populateForm();
+                loadVaccinationHistory();
+                
+                // Show form
+                loadingState.style.display = 'none';
+                childForm.style.display = 'block';
+                
+            } catch (error) {
+                console.error('Error loading child:', error);
+                showError(error.message);
+            }
+        }
+        
+        function populateForm() {
+            document.getElementById('firstName').value = currentChild.firstName || '';
+            document.getElementById('lastName').value = currentChild.lastName || '';
+            document.getElementById('dateOfBirth').value = currentChild.dateOfBirth || '';
+            document.getElementById('gender').value = currentChild.gender || '';
+            document.getElementById('birthPlace').value = currentChild.birthPlace || '';
+            document.getElementById('medicalConditions').value = currentChild.medicalConditions || '';
+            
+            // Healthcare information
+            if (currentChild.healthcare) {
+                document.getElementById('pediatrician').value = currentChild.healthcare.pediatrician || '';
+                document.getElementById('clinic').value = currentChild.healthcare.clinic || '';
+                document.getElementById('insurance').value = currentChild.healthcare.insurance || '';
+            }
+        }
+        
+        function loadVaccinationHistory() {
+            const historyContainer = document.getElementById('vaccinationHistory');
+            
+            if (childVaccinations.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="text-center" style="padding: 2rem; color: var(--gray-500);">
+                        <i class="fas fa-syringe" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>No vaccination records found</p>
+                        <p style="font-size: 0.9rem;">Add vaccinations using the schedule page</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sort vaccinations by date
+            const sortedVaccinations = childVaccinations
+                .filter(v => v.administered)
+                .sort((a, b) => new Date(b.dateAdministered) - new Date(a.dateAdministered));
+            
+            historyContainer.innerHTML = `
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Vaccine</th>
+                                <th>Date Given</th>
+                                <th>Administered By</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sortedVaccinations.map(vaccination => `
+                                <tr>
+                                    <td><strong>${vaccination.vaccineName}</strong></td>
+                                    <td>${formatDate(vaccination.dateCompleted)}</td>
+                                    <td>${vaccination.administeredBy || 'Not specified'}</td>
+                                    <td>${vaccination.location || 'Not specified'}</td>
+                                    <td>
+                                        <button onclick="viewVaccinationDetails('${vaccination.id}')" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.5rem;">
+                                            <i class="fas fa-eye"></i>
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+        
+        async function handleUpdate(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const updateBtn = document.getElementById('updateBtn');
+            
+            if (!validateForm(form)) {
+                showErrorMessage('Please fill in all required fields.');
+                return;
+            }
+            
+            const originalText = updateBtn.innerHTML;
+            updateBtn.innerHTML = '<div class="loading"></div> Updating...';
+            updateBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(form);
+                
+                const updates = {
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    dateOfBirth: formData.get('dateOfBirth'),
+                    gender: formData.get('gender'),
+                    birthPlace: formData.get('birthPlace'),
+                    medicalConditions: formData.get('medicalConditions'),
+                    healthcare: {
+                        pediatrician: formData.get('pediatrician'),
+                        clinic: formData.get('clinic'),
+                        insurance: formData.get('insurance')
+                    }
+                };
+                
+                const result = await childOperations.updateChild(currentChild.id, updates);
+                
+                if (result.success) {
+                    showSuccessMessage('Child record updated successfully!');
+                    // Update current child data
+                    currentChild = { ...currentChild, ...updates };
+                } else {
+                    throw new Error(result.error || 'Failed to update child');
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                showErrorMessage(`Update failed: ${error.message}`);
+            } finally {
+                updateBtn.innerHTML = originalText;
+                updateBtn.disabled = false;
+            }
+        }
+        
+        function showDeleteModal() {
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+        
+        async function handleDelete() {
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            const originalText = confirmBtn.innerHTML;
+            confirmBtn.innerHTML = '<div class="loading"></div> Deleting...';
+            confirmBtn.disabled = true;
+            
+            try {
+                const result = await childOperations.deleteChild(currentChild.id);
+                
+                if (result.success) {
+                    showSuccessMessage('Child record deleted successfully!');
+                    setTimeout(() => {
+                        window.location.href = 'view-records.html';
+                    }, 2000);
+                } else {
+                    throw new Error(result.error || 'Failed to delete child');
+                }
+            } catch (error) {
+                console.error('Delete error:', error);
+                showErrorMessage(`Delete failed: ${error.message}`);
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+            }
+        }
+        
+        function showError(message) {
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            loadingState.style.display = 'none';
+            errorMessage.textContent = message;
+            errorState.style.display = 'block';
+        }
+        
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                color: #dc2626;
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+            `;
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+            
+            const cardBody = document.querySelector('.card-body');
+            const existingError = cardBody.querySelector('.error-message');
+            if (existingError) {
+                existingError.remove();
+            }
+            
+            errorDiv.className = 'error-message';
+            cardBody.insertBefore(errorDiv, cardBody.firstChild);
+        }
+        
+        function showSuccessMessage(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #10b981;
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 0.5rem;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                z-index: 1000;
+            `;
+            toast.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 3000);
+        }
+        
+        function validateForm(form) {
+            const inputs = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    input.style.borderColor = '#dc2626';
+                    isValid = false;
+                } else {
+                    input.style.borderColor = '';
+                }
+            });
+            
+            return isValid;
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        
+        function viewVaccinationDetails(vaccinationId) {
+            const vaccination = childVaccinations.find(v => v.id === vaccinationId);
+            if (!vaccination) return;
+            
+            alert(`Vaccination Details:
+            
+Vaccine: ${vaccination.vaccineName}
+Date: ${formatDate(vaccination.dateCompleted)}
+Administered By: ${vaccination.administeredBy || 'Not specified'}
+Location: ${vaccination.location || 'Not specified'}
+Batch Number: ${vaccination.batchNumber || 'Not specified'}
+Notes: ${vaccination.notes || 'None'}`);
+        }
+    </script>
+    
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-xl);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-500);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .modal-close:hover {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+    </style>
+</body>
+</html>
