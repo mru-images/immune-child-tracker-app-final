@@ -24,6 +24,7 @@
                 <li><a href="education.html">Education</a></li>
                 <li><a href="profile.html">Profile</a></li>
                 <li><a href="#" id="logoutBtn">Logout</a></li>
+                <li><a href="#" id="logoutBtn">Logout</a></li>
             </ul>
             <button class="nav-toggle">
                 <i class="fas fa-bars"></i>
@@ -213,6 +214,18 @@
                         </h3>
                     </div>
                     <div class="card-body">
+                        <div class="flex-between mb-3" style="padding: 1rem; background: var(--warning-50); border-radius: var(--border-radius); border: 1px solid var(--warning-200);">
+                            <div>
+                                <h4 style="color: var(--warning-700); margin-bottom: 0.5rem;">Logout</h4>
+                                <p style="color: var(--gray-600); margin: 0;">
+                                    Sign out of your account and return to the login page.
+                                </p>
+                            </div>
+                            <button id="logoutProfileBtn" class="btn" style="background: var(--warning-500); color: white;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </div>
                         <div class="flex-between">
                             <div>
                                 <h4 style="color: var(--error-700); margin-bottom: 0.5rem;">Delete Account</h4>
@@ -336,6 +349,10 @@
             document.getElementById('passwordForm').addEventListener('submit', handlePasswordChange);
             document.getElementById('deleteAccountBtn').addEventListener('click', openDeleteAccountModal);
             document.getElementById('confirmDeleteAccountBtn').addEventListener('click', handleAccountDeletion);
+            document.getElementById('logoutProfileBtn').addEventListener('click', (e) => {
+                e.preventDefault();
+                auth.logout();
+            });
             
             // Delete confirmation input
             document.getElementById('deleteConfirmation').addEventListener('input', (e) => {

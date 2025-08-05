@@ -339,60 +339,119 @@
             if (!child) return;
             
             modalTitle.textContent = `${child.firstName} ${child.lastName}`;
-            utils.showLoading(modalBody);
+            modalBody.innerHTML = '<div class="text-center"><div class="loading"></div><p style="margin-top: 1rem;">Loading child details...</p></div>';
             modal.style.display = 'flex';
             
             try {
+                // Get current user info for parent details
+                const currentUser = auth.getCurrentUser();
+                
                 modalBody.innerHTML = `
                     <div class="grid grid-2" style="margin-bottom: 2rem;">
                         <div>
                             <h4 style="font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">Personal Information</h4>
                             <p><strong>Full Name:</strong> ${child.firstName} ${child.lastName}</p>
-                            <p><strong>Date of Birth:</strong> ${utils.formatDate(child.dateOfBirth)}</p>
-                            <p><strong>Age:</strong> ${utils.calculateAge(child.dateOfBirth)}</p>
-                            <p><strong>Gender:</strong> ${child.gender}</p>
+                            <p><strong>Date of Birth:</strong> ${formatDate(child.dateOfBirth)}</p>
+                            <p><strong>Age:</strong> ${calculateAge(child.dateOfBirth)}</p>
+                            <p><strong>Gender:</strong> ${child.gender || 'Not specified'}</p>
                             ${child.birthPlace ? `<p><strong>Birth Place:</strong> ${child.birthPlace}</p>` : ''}
                             ${child.medicalConditions ? `<p><strong>Medical Conditions:</strong> ${child.medicalConditions}</p>` : ''}
                         </div>
                         <div>
                             <h4 style="font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">Parent/Guardian</h4>
-                            <p><strong>Name:</strong> ${child.parent.firstName} ${child.parent.lastName}</p>
-                            <p><strong>Relationship:</strong> ${child.parent.relationship}</p>
-                            <p><strong>Email:</strong> ${child.parent.email}</p>
-                            <p><strong>Phone:</strong> ${child.parent.phone}</p>
-                            ${child.parent.address ? `<p><strong>Address:</strong> ${child.parent.address}</p>` : ''}
+                            <p><strong>Name:</strong> ${currentUser.firstName} ${currentUser.lastName}</p>
+                            <p><strong>Email:</strong> ${currentUser.email}</p>
+                            <p><strong>Phone:</strong> ${currentUser.phone || 'Not specified'}</p>
+                            ${currentUser.address ? `<p><strong>Address:</strong> ${currentUser.address}</p>` : ''}
                         </div>
                     </div>
                     
-                    <h4 style="font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">Recent Vaccinations</h4>
-                    <div class="table-container">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Vaccine</th>
-                                    <th>Date Administered</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${child.schedule.slice(-5).map(schedule => `
-                                    <tr>
-                                        <td>${schedule.vaccineName}</td>
-                                        <td>${schedule.dateCompleted ? utils.formatDate(schedule.dateCompleted) : 'Not administered'}</td>
-                                        <td>
-                                            <span class="badge badge-${schedule.completed ? 'success' : 'secondary'}">
-                                                ${schedule.completed ? 'Completed' : 'Pending'}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                `).join('')}
-                            </tbody>
-                        </table>
+                    ${child.healthcare ? `
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">Healthcare Information</h4>
+                        <div class="grid grid-3">
+                            ${child.healthcare.pediatrician ? `<p><strong>Pediatrician:</strong> ${child.healthcare.pediatrician}</p>` : ''}
+                            ${child.healthcare.clinic ? `<p><strong>Clinic:</strong> ${child.healthcare.clinic}</p>` : ''}
+                            ${child.healthcare.insurance ? `<p><strong>Insurance:</strong> ${child.healthcare.insurance}</p>` : ''}
+                        </div>
                     </div>
+                    ` : ''}
+                    
+                    <h4 style="font-weight: 600; color: var(--gray-800); margin-bottom: 1rem;">Recent Vaccinations</h4>
+                    ${child.schedule && child.schedule.length > 0 ? `
+                        <div class="table-container">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Vaccine</th>
+                                        <th>Date Administered</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${child.schedule.filter(s => s.completed).slice(-5).map(schedule => `
+                                        <tr>
+                                            <td>${schedule.vaccineName}</td>
+                                            <td>${schedule.dateCompleted ? formatDate(schedule.dateCompleted) : 'Not administered'}</td>
+                                            <td>
+                                                <span class="badge badge-success">
+                                                    Completed
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    ` : `
+                        <div class="text-center" style="padding: 2rem; background: var(--gray-50); border-radius: var(--border-radius);">
+                            <i class="fas fa-syringe" style="font-size: 2rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
+                            <p style="color: var(--gray-500);">No vaccinations recorded yet</p>
+                        </div>
+                    `}
                 `;
             } catch (error) {
-                utils.showError(modalBody, 'Failed to load child details');
+                console.error('Error loading child details:', error);
+                modalBody.innerHTML = `
+                    <div class="text-center" style="padding: 2rem;">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--error-500); font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p style="color: var(--error-500);">Failed to load child details</p>
+                        <p style="color: var(--gray-600); font-size: 0.9rem;">${error.message}</p>
+                    </div>
+                `;
             }
+        }
+        
+        function formatDate(dateString) {
+            if (!dateString) return 'Not specified';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+        
+        function calculateAge(birthDate) {
+            const birth = new Date(birthDate);
+            const today = new Date();
+            let age = today.getFullYear() - birth.getFullYear();
+            const monthDiff = today.getMonth() - birth.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+                age--;
+            }
+            
+            // If less than 1 year, return months
+            if (age === 0) {
+                let months = monthDiff;
+                if (today.getDate() < birth.getDate()) {
+                    months--;
+                }
+                return `${months} month${months !== 1 ? 's' : ''}`;
+            }
+            
+            return `${age} year${age !== 1 ? 's' : ''}`;
         }
         
         // Modal functionality

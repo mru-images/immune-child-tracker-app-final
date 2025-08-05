@@ -268,7 +268,7 @@ class ScheduleManager {
                                         </td>
                                         <td>
                                             ${!vaccine.completed ? 
-                                                `<button onclick="scheduleManager.recordVaccination('${vaccine.id}', '${vaccine.vaccineName}')" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem;">
+                                                `<button onclick="scheduleManager.recordVaccination('${vaccine.id}', '${vaccine.vaccineName}', '${vaccine.vaccineDescription || ''}')" class="btn btn-primary" style="font-size: 0.8rem; padding: 0.5rem;">
                                                     <i class="fas fa-syringe"></i>
                                                     Record
                                                 </button>` :
@@ -338,12 +338,19 @@ class ScheduleManager {
         modal.style.display = 'flex';
     }
 
-    recordVaccination(scheduleId, vaccineName) {
+    recordVaccination(scheduleId, vaccineName, vaccineDescription) {
         const modal = document.getElementById('vaccinationModal');
         const vaccineSelect = document.getElementById('vaccineSelect');
+        const dateInput = document.getElementById('dateAdministered');
         
         if (vaccineSelect) {
             vaccineSelect.value = scheduleId;
+            
+            // Set today's date as default
+            if (dateInput) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+            }
         }
         if (modal) {
             modal.style.display = 'flex';
